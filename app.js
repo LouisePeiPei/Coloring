@@ -22,6 +22,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+app.get('/', function(req, res, next) {
+  res.render('index',{title:"Swatching"});
+});
+
+app.get('/postswatch', function(req, res, next) {
+  res.render('postyourswatch');
+});
+
+app.post('/processpost', function(req, res, next) {
+  console.dir(req.body)
+  res.render('postresult',{title:"Form Data", BrandName:req.body.BrandName, TypeMakeup:req.body.TypeMakeup, ColorCode:req.body.ColorCode, Comments:req.body.Comments});
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

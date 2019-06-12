@@ -1,0 +1,20 @@
+<%- include('header') -%>
+    <div class="jumbotron">
+        <h1>Post Your Comments on Makeup!</h1>
+        <p>Everybody else in Swatching will see your comments!</p>
+        <p>Your shopping experience will be very helpful to other makeup lovers!</p>
+    </div>
+
+    <form method="post" action="/processpost">
+      Brand Name: <br><textarea name="BrandName"></textarea>
+      <br>
+      Type of Makeup: <br><textarea name="TypeMakeup"></textarea>
+      <br>
+      Color Code: <br><textarea name="ColorCode"></textarea>
+      <br>
+      Comments: <br><textarea name="Comments"></textarea>
+      <br>
+      <input type="submit">
+    </form>
+
+<%- include('footer') -%>
