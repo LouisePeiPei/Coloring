@@ -3,8 +3,8 @@ const Swatch = require( '../models/Swatch' );
 
 
 exports.saveSwatch = ( req, res ) => {
-  //console.log("in saveSkill!")
-  //console.dir(req)
+  console.log("in saveSwatch!")
+  console.dir(req.body)
   let newSwatch = new Swatch( {
     BrandName:req.body.BrandName,
     TypeMakeup: req.body.TypeMakeup,
@@ -16,11 +16,13 @@ exports.saveSwatch = ( req, res ) => {
 
   newSwatch.save()
     .then( () => {
-      res.redirect( '/showSwatch' );
+      console.log("saving swatch")
+      res.redirect( '/postresult' );
     } )
     .catch( error => {
       res.send( error );
-    } );
+    } ).
+    then(() => { console.log("saved swatch")})
 };
 
 
@@ -32,6 +34,27 @@ exports.getAllSwatch = ( req, res ) => {
       res.render( 'swatchPlaza', {
         swatches:swatches,
         title:'swatch'
+      } );
+    } )
+    .catch( ( error ) => {
+      console.log( error.message );
+      return [];
+    } )
+    .then( () => {
+      //console.log( 'skill promise complete' );
+    } );
+};
+
+// this displays all of the skills
+exports.getOneSwatch = ( req, res ) => {
+  //gconsle.log('in getAllSkills')
+  const id = req.params.id
+  console.log('********************   the id is '+id)
+  Swatch.findOne({_id:id})
+    .exec()
+    .then( ( swatch ) => {
+      res.render( 'swatch', {
+        swatch:swatch, title:"swatch"
       } );
     } )
     .catch( ( error ) => {

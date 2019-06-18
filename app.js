@@ -4,6 +4,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// AUTHENTICATION MODULES
+session = require("express-session"),
+bodyParser = require("body-parser"),
+User = require( './models/User' ),
+flash = require('connect-flash')
+// END OF AUTHENTICATION MODULES
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -17,6 +24,14 @@ db.once('open', function() {
 
 const swatchController = require('./controllers/swatchController')
 
+// Authentication
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+// here we set up authentication with passport
+const passport = require('passport')
+const configPassport = require('./config/passport')
+configPassport(passport)
+
+
 
 var app = express();
 
@@ -24,6 +39,115 @@ app.use(function(req,res,next){
     console.log("about to make some routes")
     next()
 });
+
+/*************************************************************************
+     HERE ARE THE AUTHENTICATION ROUTES
+**************************************************************************/
+
+app.use(session({ secret: 'zzbbyanana' }));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+
+
+const approvedLogins = ["tjhickey724@gmail.com","csjbs2018@gmail.com"];
+
+// here is where we check on their logged in status
+app.use((req,res,next) => {
+  res.locals.title="YellowCartwheel"
+  res.locals.loggedIn = false
+  if (req.isAuthenticated()){
+    if (req.user.googleemail.endsWith("@brandeis.edu") ||
+          approvedLogins.includes(req.user.googleemail))
+          {
+            console.log("user has been Authenticated")
+            res.locals.user = req.user
+            res.locals.loggedIn = true
+          }
+    else {
+      res.locals.loggedIn = false
+    }
+    console.log('req.user = ')
+    console.dir(req.user)
+    // here is where we can handle whitelisted logins ...
+    if (req.user){
+      if (req.user.googleemail=='luyaopei@brandeis.edu'){
+        console.log("Owner has logged in")
+        res.locals.status = 'owner'
+      }else {
+        console.log('student has logged in')
+        res.locals.status = 'user'
+      }
+    }
+  }
+  next()
+})
+
+
+
+// here are the authentication routes
+
+app.get('/loginerror', function(req,res){
+  res.render('loginerror',{})
+})
+
+app.get('/login', function(req,res){
+  res.render('login',{})
+})
+
+
+
+// route for logging out
+app.get('/logout', function(req, res) {
+        req.session.destroy((error)=>{console.log("Error in destroying session: "+error)});
+        console.log("session has been destroyed")
+        req.logout();
+        res.redirect('/');
+    });
+
+
+// =====================================
+// GOOGLE ROUTES =======================
+// =====================================
+// send to google to do the authentication
+// profile gets us their basic information including their name
+// email gets their emails
+app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+
+
+app.get('/login/authorized',
+        passport.authenticate('google', {
+                successRedirect : '/',
+                failureRedirect : '/loginerror'
+        })
+      );
+
+
+// route middleware to make sure a user is logged in
+function isLoggedIn(req, res, next) {
+    console.log("checking to see if they are authenticated!")
+    // if user is authenticated in the session, carry on
+    res.locals.loggedIn = false
+    if (req.isAuthenticated()){
+      console.log("user has been Authenticated")
+      res.locals.loggedIn = true
+      return next();
+    } else {
+      console.log("user has not been authenticated...")
+      res.redirect('/login');
+    }
+}
+
+// we require them to be logged in to see their profile
+app.get('/profile', isLoggedIn, function(req, res) {
+        res.render('profile')/*, {
+            user : req.user // get the user out of session and pass to template
+        });*/
+    });
+
+// END OF THE AUTHENTICATION ROUTES
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -46,18 +170,19 @@ app.get('/postswatch', function(req, res, next) {
   res.render('postyourswatch');
 });
 
-app.get('/swatchPlaza', function(req, res, next) {
-  res.render('swatchPlaza');
-});
-
-app.post('/processpost', function(req, res, next) {
+app.get('/postresult', function(req, res, next) {
   console.dir(req.body)
   res.render('postresult',{title:"Form Data", BrandName:req.body.BrandName, TypeMakeup:req.body.TypeMakeup, ColorCode:req.body.ColorCode, userComments:req.body.userComments});
 });
+app.use(function(req,res,next){
+    console.log("about to processform")
+    next()
+});
+app.post('/processform',swatchController.saveSwatch)
 
-app.post('/processform', swatchController.saveSwatch)
+app.get('/swatchPlaza', swatchController.getAllSwatch)
 
-app.get('/showSwatch', swatchController.getAllSwatch)
+app.get('/swatchPlaza/:id', swatchController.getOneSwatch)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

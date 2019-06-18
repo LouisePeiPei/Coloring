@@ -11,10 +11,19 @@
       <% for(var i=0; i<swatches.length; i++) { %>
         <li>
           <i>
-          Makeup: <%= swatches[i].TypeMakeup %></\/i>
+          Brand Name: <%= swatches[i].BrandName %></\/i>
           <br>
           <i>
-          Color: <%= swatches[i].ColorCode %></\/i>
+          Makeup Type: <%= swatches[i].TypeMakeup %></\/i>
+          <br>
+          <i>
+          Color Code: <%= swatches[i].ColorCode %></\/i>
+          <br>
+          <i>
+          Comments: <%= swatches[i].userComments %></\/i>
+          <br>
+          <a href="/swatchPlaza/<%= swatches[i]._id %>">
+          More information</a>
          </li>
       <% } %>
     </ol>

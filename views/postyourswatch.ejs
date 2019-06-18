@@ -1,6 +1,6 @@
 <%- include('header') -%>
     <div class="jumbotron">
-        <h1>Post Your Comments on Makeup!</h1>
+        <h1>Post Your Comments on Makeup!!!!</h1>
         <p>Everybody else in Swatching will see your comments!</p>
         <p>Your shopping experience will be very helpful to other makeup lovers!</p>
     </div>
@@ -14,7 +14,11 @@
       <br>
       Comments: <br><textarea name="userComments"></textarea>
       <br>
-      <input type="submit">
+      <% if (loggedIn) { %>
+     <input type="submit">
+     <% } else { %>
+       You must be logged in to submit form info.
+       <% } %>
     </form>
 
 
