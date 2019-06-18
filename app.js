@@ -8,7 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 const mongoose = require( 'mongoose' );
-mongoose.connect( 'mongodb://localhost/skillmastery' );
+mongoose.connect( 'mongodb://localhost/test' , {useNewUrlParser: true});
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -19,6 +19,11 @@ const commentController = require('./controllers/commentController')
 
 
 var app = express();
+
+app.use(function(req,res,next){
+    console.log("about to make some routes")
+    next()
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,12 +46,16 @@ app.get('/postswatch', function(req, res, next) {
   res.render('postyourswatch');
 });
 
+app.get('/swatchPlaza', function(req, res, next) {
+  res.render('swatchPlaza');
+});
+
 app.post('/processpost', function(req, res, next) {
   console.dir(req.body)
   res.render('postresult',{title:"Form Data", BrandName:req.body.BrandName, TypeMakeup:req.body.TypeMakeup, ColorCode:req.body.ColorCode, userComments:req.body.userComments});
 });
 
-app.post('/processform', commentController.saveComment);
+app.post('/processpost', commentController.saveComment);
 
 app.get('/showComments', commentController.getAllComments);
 

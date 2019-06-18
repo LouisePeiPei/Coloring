@@ -6,8 +6,10 @@ exports.saveComment = ( req, res ) => {
   //console.log("in saveSkill!")
   //console.dir(req)
   let newComment = new Comment( {
+    BrandName:req.body.BrandName,
     TypeMakeup: req.body.TypeMakeup,
-    ColorCode: req.body.ColorCode
+    ColorCode: req.body.ColorCode,
+    userComments:req.body.userComments
   } )
 
   //console.log("skill = "+newSkill)
@@ -28,7 +30,7 @@ exports.getAllComments = ( req, res ) => {
     .exec()
     .then( ( comments ) => {
       res.render( 'comments', {
-        comments:ColorCode,
+        comments:comments,
         title:'comments'
       } );
     } )

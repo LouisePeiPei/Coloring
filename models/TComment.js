@@ -3,8 +3,8 @@ const mongoose = require( 'mongoose' );
 const Schema = mongoose.Schema;
 
 var commentSchema = Schema( {
-  TypeMakeup: String,
-  ColorCode: String
+  url: String,
+  comment: String
 } );
 
-module.exports = mongoose.model( 'comments', commentSchema );
+module.exports = mongoose.model( 'Comment', commentSchema );
