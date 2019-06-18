@@ -7,6 +7,17 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+const mongoose = require( 'mongoose' );
+mongoose.connect( 'mongodb://localhost/skillmastery' );
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log("we are connected!")
+});
+
+const commentController = require('./controllers/commentController')
+
+
 var app = express();
 
 // view engine setup
@@ -32,8 +43,12 @@ app.get('/postswatch', function(req, res, next) {
 
 app.post('/processpost', function(req, res, next) {
   console.dir(req.body)
-  res.render('postresult',{title:"Form Data", BrandName:req.body.BrandName, TypeMakeup:req.body.TypeMakeup, ColorCode:req.body.ColorCode, Comments:req.body.Comments});
+  res.render('postresult',{title:"Form Data", BrandName:req.body.BrandName, TypeMakeup:req.body.TypeMakeup, ColorCode:req.body.ColorCode, userComments:req.body.userComments});
 });
+
+app.post('/processform', commentController.saveComment);
+
+app.get('/showComments', commentController.getAllComments);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

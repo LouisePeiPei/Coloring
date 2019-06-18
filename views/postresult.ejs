@@ -10,7 +10,19 @@
     of color code <%=ColorCode%>
     from <%=BrandName%>!
     <br>
-    Your comments was <%= Comments%>
+    Your comments was <%= userComments%>
     <img src="http://www.foodol.org/uploads/allimg/171206/133145C22-0.png" width="100%"/>
+
+    <ol>
+      <% for(i=0; i<comments.length; i++) { %>
+        <li>
+          <i>
+          <%= comments[i].TypeMakeup %></\/i>
+          <br>
+          <i>
+          <%= comments[i].ColorCode %></\/i>
+         </li>
+      <% } %>
+    </ol>
 
 <%- include('footer') -%>
