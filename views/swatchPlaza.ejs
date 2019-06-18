@@ -6,17 +6,17 @@
     </div>
 
 
+    <ol>
 
-    <div class="jumbotron">
-        <h1>Comment for <%= comment._id %> </h1>
-    </div>
-    URL: <%= comment.url %> <br>
-    Comment: <%= comment.comment %>
-    <hr>
-
-<%- include('bootfooter') -%>
-
-
-  
+      <% for(var i=0; i<swatches.length; i++) { %>
+        <li>
+          <i>
+          Makeup: <%= swatches[i].TypeMakeup %></\/i>
+          <br>
+          <i>
+          Color: <%= swatches[i].ColorCode %></\/i>
+         </li>
+      <% } %>
+    </ol>
 
     <%- include('footer') -%>

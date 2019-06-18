@@ -1,11 +1,11 @@
 'use strict';
-const Comment = require( '../models/Comment' );
+const Swatch = require( '../models/Swatch' );
 
 
-exports.saveComment = ( req, res ) => {
+exports.saveSwatch = ( req, res ) => {
   //console.log("in saveSkill!")
   //console.dir(req)
-  let newComment = new Comment( {
+  let newSwatch = new Swatch( {
     BrandName:req.body.BrandName,
     TypeMakeup: req.body.TypeMakeup,
     ColorCode: req.body.ColorCode,
@@ -14,9 +14,9 @@ exports.saveComment = ( req, res ) => {
 
   //console.log("skill = "+newSkill)
 
-  newComment.save()
+  newSwatch.save()
     .then( () => {
-      res.redirect( '/showComments' );
+      res.redirect( '/showSwatch' );
     } )
     .catch( error => {
       res.send( error );
@@ -24,14 +24,14 @@ exports.saveComment = ( req, res ) => {
 };
 
 
-exports.getAllComments = ( req, res ) => {
+exports.getAllSwatch = ( req, res ) => {
   //gconsle.log('in getAllSkills')
-  Comment.find( )
+  Swatch.find( )
     .exec()
-    .then( ( comments ) => {
-      res.render( 'comments', {
-        comments:comments,
-        title:'comments'
+    .then( ( swatches ) => {
+      res.render( 'swatchPlaza', {
+        swatches:swatches,
+        title:'swatch'
       } );
     } )
     .catch( ( error ) => {

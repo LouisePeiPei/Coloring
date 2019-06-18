@@ -15,7 +15,7 @@ db.once('open', function() {
   console.log("we are connected!")
 });
 
-const commentController = require('./controllers/commentController')
+const swatchController = require('./controllers/swatchController')
 
 
 var app = express();
@@ -55,9 +55,9 @@ app.post('/processpost', function(req, res, next) {
   res.render('postresult',{title:"Form Data", BrandName:req.body.BrandName, TypeMakeup:req.body.TypeMakeup, ColorCode:req.body.ColorCode, userComments:req.body.userComments});
 });
 
-app.post('/processpost', commentController.saveComment);
+app.post('/processform', swatchController.saveSwatch)
 
-app.get('/showComments', commentController.getAllComments);
+app.get('/showSwatch', swatchController.getAllSwatch)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
