@@ -147,8 +147,6 @@ app.get('/profile', isLoggedIn, function(req, res) {
         });*/
     });
 
-
-
 // END OF THE AUTHENTICATION ROUTES
 
 // view engine setup
