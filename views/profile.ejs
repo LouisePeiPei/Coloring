@@ -6,6 +6,19 @@
             You are logged in to Swatching.
         </p>
 
+        <p>Last updated on <%= user.lastUpdate %> </p>
     </div>
 
+    <h2><pre>     Edit Profile</pre></h2>
+      <form method="post" action="/updateProfile">
+      User Name: <br><textarea name="BrandName"></textarea>
+      <br>
+      Profile Picture url: <br><textarea name="TypeMakeup"></textarea>
+      <br>
+      : <br><textarea name="ColorCode"></textarea>
+      <br>
+      Bio: <br><textarea name="userComments"></textarea>
+      <br>
+     <input type="update">
+    </form>
 <%- include('footer') -%>
