@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var apikey = require('./config/apikey');
 // AUTHENTICATION MODULES
 session = require("express-session"),
 bodyParser = require("body-parser"),
@@ -23,6 +23,9 @@ db.once('open', function() {
 });
 
 const swatchController = require('./controllers/swatchController')
+
+const profileController = require('./controllers/profileController')
+
 
 // Authentication
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
@@ -56,7 +59,7 @@ const approvedLogins = ["tjhickey724@gmail.com","csjbs2018@gmail.com"];
 
 // here is where we check on their logged in status
 app.use((req,res,next) => {
-  res.locals.title="YellowCartwheel"
+  res.locals.title="Swatching"
   res.locals.loggedIn = false
   if (req.isAuthenticated()){
     if (req.user.googleemail.endsWith("@brandeis.edu") ||
@@ -147,6 +150,18 @@ app.get('/profile', isLoggedIn, function(req, res) {
         });*/
     });
 
+app.get('/editProfile',isLoggedIn, (req,res)=>{
+    res.render('editProfile')
+})
+
+app.get('/profiles', isLoggedIn, profileController.getAllProfiles);
+app.get('/showProfile/:id', isLoggedIn, profileController.getOneProfile);
+
+
+
+app.post('/updateProfile',profileController.update)
+
+
 // END OF THE AUTHENTICATION ROUTES
 
 // view engine setup
@@ -174,6 +189,9 @@ app.get('/postresult', function(req, res, next) {
   console.dir(req.body)
   res.render('postresult',{title:"Form Data", BrandName:req.body.BrandName, TypeMakeup:req.body.TypeMakeup, ColorCode:req.body.ColorCode, userComments:req.body.userComments});
 });
+
+
+
 app.use(function(req,res,next){
     console.log("about to processform")
     next()
