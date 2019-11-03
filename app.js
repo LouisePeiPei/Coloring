@@ -55,7 +55,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 
-const approvedLogins = ["tjhickey724@gmail.com","csjbs2018@gmail.com"];
+const approvedLogins = ["luyaopei@brandeis.edu"];
 
 // here is where we check on their logged in status
 app.use((req,res,next) => {
